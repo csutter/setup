@@ -1,0 +1,9 @@
+runtime: docker
+arch: host
+vmType: vz
+mountType: virtiofs
+
+cpu: 4
+memory: 16 # GiB
+disk: 50 # GiB
+rootDisk: 20 # GiB

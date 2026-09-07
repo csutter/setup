@@ -1,0 +1,12 @@
+# Scratch directory for transient files (e.g. notes)
+.scratch
+
+# Plan files
+.plans
+
+# Claude
+**/.claude/*.local.*
+CLAUDE.local.md
+
+# macOS stray files
+.DS_Store

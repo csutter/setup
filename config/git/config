@@ -1,0 +1,53 @@
+[user]
+  email = git@doublesignal.com
+  name = Christian Sutter
+
+[alias]
+  a = add
+  b = branch
+  co = checkout
+  cm = commit -m
+  d = diff
+  ds = diff --staged
+  l = log --format=oneline
+  ll = log --format=medium
+  prn = remote prune origin
+  p = push
+  s = status
+  u = pull
+
+[commit]
+  gpgsign = true
+
+[gpg]
+  format = ssh
+
+[gpg "ssh"]
+  allowedSignersFile = ~/.config/git/allowedsigners
+
+[merge]
+  ff = only
+  conflictstyle = zdiff3
+
+[color]
+  ui = true
+
+[push]
+  default = simple
+  autoSetupRemote = true
+
+[pull]
+  rebase = true
+
+[rebase]
+  autostash = true
+
+[core]
+  autocrlf = input
+
+[init]
+  defaultBranch = main
+
+[include]
+  # Used for per-machine signing key overrides
+  path = "config.signingkey"
