@@ -1,0 +1,7 @@
+# This machine doesn't allow adding new shells to /etc/shells, so we need to override the default
+# shell through the profile instead.
+if [ -t 1 ] && command -v fish >/dev/null 2>&1
+then
+    export SHELL="$(command -v fish)"
+    exec fish
+fi
