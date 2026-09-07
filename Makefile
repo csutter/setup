@@ -16,6 +16,9 @@ else
   OS := unknown
 endif
 
+# Include host-specific environment variables if available
+-include $(HOST_DIR)/env.mk
+
 .DEFAULT_GOAL := help
 .PHONY: help check-host install dotfiles packages packages-macos packages-unknown
 
@@ -28,7 +31,7 @@ check-host:
 
 install: check-host packages dotfiles
 
-packages: packages-$(OS)
+packages: check-host packages-$(OS)
 
 packages-macos:
 	brew bundle install --file="$(DOTFILES_DIR)/tag-os-macos/config/homebrew/Brewfile"
