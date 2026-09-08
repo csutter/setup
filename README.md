@@ -29,3 +29,5 @@ Bootstrapping and dotfiles for my machines
   commits, and add it to `config/git/allowedsigners` too
 - Add the signing and SSH keys from the host to GitHub and other forges
 - Replace the `origin` remote for the local repo clone with the read/write one
+- Check out the private companion repository into `~/src/csutter/setup-private`
+- Re-run `HOST=foobar make dotfiles` to include content from the private repository

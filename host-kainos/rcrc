@@ -1,4 +1,4 @@
-DOTFILES_DIRS="~/src/csutter/setup"
+DOTFILES_DIRS="~/src/csutter/setup ~/src/csutter/setup-private"
 EXCLUDES="README.md Makefile LICENSE env.mk"
 HOSTNAME="kainos"
 TAGS="os-macos"
