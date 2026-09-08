@@ -42,7 +42,7 @@ packages-unknown:
 	@echo "error: unsupported OS ($(UNAME))" >&2; exit 1
 
 dotfiles: check-host
-	RCRC="$(RCRC)" HOSTNAME="$(HOST)" $(RCM_PATH)/rcup -v -d "$(DOTFILES_DIR)"
+	RCRC="$(RCRC)" HOSTNAME="$(HOST)" $(RCM_PATH)/rcup -v
 
 set-shell: check-host
 ifdef SETUP_SKIP_SET_SHELL
