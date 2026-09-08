@@ -31,3 +31,12 @@ Bootstrapping and dotfiles for my machines
 - Replace the `origin` remote for the local repo clone with the read/write one
 - Check out the private companion repository into `~/src/csutter/setup-private`
 - Re-run `HOST=foobar make dotfiles` to include content from the private repository
+
+## Tags
+This repository uses rcm tags configured in host-specific `rcrc` files to configure sets of dotfiles
+to apply:
+
+- [os-linux](tag-os-linux/): Any machine with Linux
+- [os-macos](tag-os-macos/): Any machine with macOS
+- [type-workstation](tag-type-workstation/): A physical, local, pet workstation I sit in front of
+      and use interactively (as opposed to remote servers, containers, VMs, ...)

@@ -1,6 +1,6 @@
 DOTFILES_DIRS="~/src/csutter/setup ~/src/csutter/setup-private"
 EXCLUDES="README.md Makefile LICENSE"
 HOSTNAME="falcon"
-TAGS="os-macos"
+TAGS="os-macos type-workstation"
 UNDOTTED="Library"
 COPY_ALWAYS="Library/Fonts/*"
