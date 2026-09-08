@@ -11,10 +11,10 @@ HOST_DIR     := $(DOTFILES_DIR)/host-$(HOST)
 RCRC         := $(HOST_DIR)/rcrc
 UNAME := $(shell uname -s)
 ifeq ($(UNAME),Darwin)
-  OS := macos
+	OS := macos
 	RCM_PATH := /opt/homebrew/bin
 else
-  OS := unknown
+	OS := unknown
 endif
 
 # Include host-specific environment variables if available
@@ -46,20 +46,24 @@ dotfiles: check-host
 
 set-shell: check-host
 ifdef SETUP_SKIP_SET_SHELL
-	@echo "SETUP_SKIP_SET_SHELL is set; skipping /etc/shells update and chsh"
+		@echo "SETUP_SKIP_SET_SHELL is set; skipping /etc/shells update and chsh"
 else
-	@FISH_PATH="$$(command -v fish)"; \
-	if [ -z "$$FISH_PATH" ]; then \
-		echo "error: fish is not installed or not on PATH" >&2; \
-		exit 1; \
-	fi; \
-	echo "Found fish at $$FISH_PATH"
-	@if ! grep -qxF "$$(command -v fish)" /etc/shells; then \
-		echo "Adding $$(command -v fish) to /etc/shells (requires sudo)..."; \
-		echo "$$(command -v fish)" | sudo tee -a /etc/shells > /dev/null; \
-	else \
-		echo "$$(command -v fish) already present in /etc/shells"; \
-	fi; \
-	echo "Setting default shell for $$(whoami) to $$(command -v fish)..."; \
-	chsh -s "$$(command -v fish)"
+		@FISH_PATH="$$(command -v fish)"; \
+		if [ -z "$$FISH_PATH" ]; then \
+				echo "error: fish is not installed or not on PATH" >&2; \
+				exit 1; \
+		fi; \
+		echo "Found fish at $$FISH_PATH"; \
+		if [ "$$SHELL" = "$$FISH_PATH" ]; then \
+				echo "Default shell is already $$FISH_PATH; skipping chsh"; \
+		else \
+				if ! grep -qxF "$$FISH_PATH" /etc/shells; then \
+						echo "Adding $$FISH_PATH to /etc/shells (requires sudo)..."; \
+						echo "$$FISH_PATH" | sudo tee -a /etc/shells > /dev/null; \
+				else \
+						echo "$$FISH_PATH already present in /etc/shells"; \
+				fi; \
+				echo "Setting default shell for $$(whoami) to $$FISH_PATH..."; \
+				chsh -s "$$FISH_PATH"; \
+		fi
 endif
