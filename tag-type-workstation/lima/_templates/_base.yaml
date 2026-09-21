@@ -1,0 +1,51 @@
+minimumLimaVersion: 2.2.0
+
+base:
+  - template:_images/fedora-44
+
+# Treat VMs as "plain" and disable all default host integration
+#
+# This maximises isolation from the host system and turns off a bunch of convenience features I
+# don't want to use anyway.
+#
+# see https://lima-vm.io/docs/config/plain/
+plain: true
+
+# Tweak default VM resources
+cpus: 4
+memory: 8GiB
+disk: 30GiB
+
+# Standard lima user setup is a bit messy as it assumes full host integration - so reset UID and
+# home directory (and set my preferred shell)
+user:
+  name: chris
+  uid: 1000
+  home: /home/chris
+  shell: /usr/bin/fish
+
+param:
+  # available to override in templates with additional packages to install (space separated)
+  ExtraPackages: ""
+
+provision:
+  - mode: system
+    script: |
+      #!/bin/bash
+      set -eux -o pipefail
+
+      # Install packages
+      dnf update -y
+      dnf install -y @development-tools curl fd-find fish git jq rcm tree ${PARAM_ExtraPackages:-}
+
+probes:
+  - mode: readiness
+    description: Package installation complete
+    # check for presence of fish which should always be installed
+    script: |
+      #!/bin/bash
+      set -eux -o pipefail
+      if ! timeout 120s bash -c "until command -v fish >/dev/null; do sleep 3; done"; then
+        echo >&2 "fish not installed yet"; exit 1
+      fi
+    hint: Failed to install packages. See /var/log/cloud-init-output.log in the guest.
