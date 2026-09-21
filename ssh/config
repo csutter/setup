@@ -1,0 +1,2 @@
+# Try and avoid global config in this file, preferring the drop-in directory ~/.ssh/conf.d/
+Include ~/.ssh/conf.d/*
