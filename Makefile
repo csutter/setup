@@ -36,7 +36,6 @@ packages: check-host packages-$(OS)
 
 packages-macos:
 	brew bundle install --file="$(DOTFILES_DIR)/tag-os-macos/config/homebrew/Brewfile"
-	brew services start colima
 
 packages-unknown:
 	@echo "error: unsupported OS ($(UNAME))" >&2; exit 1

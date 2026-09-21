@@ -7,8 +7,3 @@ set -gx SSH_AUTH_SOCK $HOME/Library/Containers/com.maxgoedjen.Secretive.SecretAg
 
 # Homebrew path
 fish_add_path /opt/homebrew/bin
-
-# Stop colima overwriting its own config files on startup (because we want to track it in this repo)
-# Note we also set this in the env for the Homebrew service, but we may want to run colima manually
-# on occasion.
-set -gx COLIMA_SAVE_CONFIG 0
