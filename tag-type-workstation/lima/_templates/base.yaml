@@ -29,6 +29,7 @@ param:
   ExtraPackages: ""
 
 provision:
+  # Install packages
   - mode: system
     script: |
       #!/bin/bash
@@ -37,6 +38,17 @@ provision:
       # Install packages
       dnf update -y
       dnf install -y @development-tools curl fd-find fish git jq rcm tree ${PARAM_ExtraPackages:-}
+  # Set up scaffold user environment
+  - mode: user
+    script: |
+      #!/bin/bash
+      set -eux -o pipefail
+
+      mkdir -p ~/src/csutter
+      mkdir -p ~/.ssh
+      chmod 700 ~/.ssh
+      ssh-keyscan github.com >> ~/.ssh/known_hosts
+      chmod 644 ~/.ssh/known_hosts
 
 probes:
   - mode: readiness
