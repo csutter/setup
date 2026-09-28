@@ -1,0 +1,11 @@
+[container]
+cpus = 2
+memory = "1gb"
+
+[build]
+rosetta = false  # Avoid building x86 images by accident
+
+[machine]
+homeMount = "none"  # Avoid default home directory mounting
+cpus = 4
+memory = "8gb"
