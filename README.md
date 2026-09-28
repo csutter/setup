@@ -43,7 +43,7 @@ git clone https://github.com/csutter/setup ~/src/csutter/setup
 /opt/homebrew/bin/rcup -d ~/src/csutter/setup -t workstation-mac
 
 # Install all remaining software
-/opt/homebrew/bin/brew bundle install
+/opt/homebrew/bin/brew bundle install -g
 
 # Change shell to fish
 echo "/opt/homebrew/bin/fish" | sudo tee -a /etc/shells
