@@ -1,5 +1,5 @@
 # setup
-Bootstrapping and dotfiles for my machines
+Unified dotfiles for my machines
 
 > [!WARNING]
 >
@@ -7,30 +7,80 @@ Bootstrapping and dotfiles for my machines
 > is specific to my own setup so there are no guarantees anything will work for you, and no
 > contributions accepted.
 
-## Prerequisites
-### macOS
-- Homebrew, ideally using the pkg installer [for the latest release][homebrew]
+## Targets
+Most of my dotfiles are agnostic across operating systems and environments, but there are
+differences between the two main places I use them which are handled by [rcm tags][tags]:
+- [workstation-mac](tag-workstation-mac/): macOS workstations, such as a personal or work Mac
+- [dev-vm](tag-dev-vm/): Linux virtual machines for development, separated per project or group of
+  projects
+
+Each tag contributes an `rcrc` appropriate to its target. Some limited host-specific configuration
+can also be added through [rcm's `host-XXX` directories][host] where absolutely necessary.
+
+[host]: https://thoughtbot.github.io/rcm/#HOST_SPECIFIC_DOTFILES
+[tags]: https://thoughtbot.github.io/rcm/#TAGGED_DOTFILES
+
+## Setting up a new workstation Mac
+The creation and bootstrapping of development VMs should be entirely scripted, but bootstrapping a
+new Mac happens so rarely that the bit of manual effort involved isn't worth automating.
+
+### Prerequisites
+Install Homebrew using the pkg installer [for the latest release][homebrew].
 
 [homebrew]: https://github.com/Homebrew/brew/releases
 
-### Linux
-- GNU Make available
+### Clone repository and initial setup
+Set up my public dotfiles and install software packages through good old `Terminal.app`:
+```bash
+# Manually install `rcm` (remaining packages will be handled by `brew bundle`)
+/opt/homebrew/bin/brew install rcm
 
-## Setup on a new machine
-- Clone this repository into `~/src/csutter/setup` from the public HTTPS remote
-- Create a new host-specific `rcrc` file for the machine, for example `host-foobar/rcrc` (see
-  existing host directories for inspiration)
-- Run `HOST=foobar make install`
-  - Note that rcm is notoriously bad at hostname handling on macOS, so the Makefile mandates
-    specifying it explicitly
-- Generate SSH keys on the host
-  - macOS: use Secretive, which is installed as a Homebrew cask
-- Create a host-specific `config/git/config.signingkey` with the public key to be used for signing
-  commits, and add it to `config/git/allowedsigners` too
-- Add the signing and SSH keys from the host to GitHub and other forges
-- Replace the `origin` remote for the local repo clone with the read/write one
-- Check out the private companion repository into `~/src/csutter/setup-private`
-- Re-run `HOST=foobar make dotfiles` to include content from the private repository
+# Clone the public dotfiles repo
+mkdir -p ~/src/csutter/setup
+git clone https://github.com/csutter/setup ~/src/csutter/setup
+
+# Set up initial set of dotfiles
+/opt/homebrew/bin/rcup -d ~/src/csutter/setup -t workstation-mac
+
+# Install all remaining software
+/opt/homebrew/bin/brew bundle install
+
+# Change shell to fish
+echo "/opt/homebrew/bin/fish" | sudo tee -a /etc/shells
+chsh -s /opt/homebrew/bin/fish
+```
+
+Terminate the `Terminal.app` session, and open Ghostty (installed as Homebrew cask) to verify Fish
+is available and configured correctly.
+
+### Generate and set up SSH and Git signing keys
+Using Secretive (installed as Homebrew cask) and set up an SSH key and Git signing key.
+
+Add the public signing key to a local `~/.config/git/config.signingkey` as well as
+[`config/git/allowedsigners`](config/git/allowedsigners).
+
+Upload the SSH and/or signing public keys to all relevant Git forges.
+
+### Migrate public dotfiles to read/write origin; commit `allowedsigners` changes
+```bash
+cd ~/src/csutter/setup
+
+git remote set-url origin git@github.com:csutter/setup.git
+git add .
+git commit -m "Add new signing key for <...>"
+git push
+```
+
+### Set up private companion dotfiles
+This contains mostly proprietary and/or non-free things, for example commercial fonts, that I can't
+share in this public repository.
+
+```bash
+git clone git@github.com:csutter/setup-private.git ~/src/csutter/setup-private
+
+# Re-run `rcup` to symlink the new dotfiles
+rcup
+```
 
 ## Tags
 This repository uses rcm tags configured in host-specific `rcrc` files to configure sets of dotfiles

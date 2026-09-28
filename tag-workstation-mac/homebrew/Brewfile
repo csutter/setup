@@ -1,0 +1,10 @@
+brew "container"
+brew "fd"
+brew "fish"
+brew "git"
+brew "rcm"
+brew "tree"
+
+cask "ghostty"
+cask "linearmouse"
+cask "secretive"

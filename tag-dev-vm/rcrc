@@ -1,0 +1,3 @@
+DOTFILES_DIRS="/mnt/setup /mnt/setup-private"
+EXCLUDES="README.md LICENSE"
+TAGS="dev-vm"
