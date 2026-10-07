@@ -1,0 +1,2 @@
+This skeleton directory needs to exist for my `container` workflow, and may contain CA certificates
+on machines where they are required to be installed in containers.
