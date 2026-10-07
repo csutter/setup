@@ -1,0 +1,54 @@
+minimumLimaVersion: 2.2.0
+
+base:
+- template:_images/fedora-44
+
+vmType: vz
+mountType: virtiofs
+cpus: 2
+memory: 12GiB
+
+# Set up a plain user instead of default Lima convention (as we don't want tight host integration)
+user:
+  name: dev
+  comment: Dev
+  home: /home/dev
+  shell: /usr/bin/fish
+
+mounts:
+- location: "{{.Home}}/src/csutter/setup"
+  mountPoint: /mnt/setup
+- location: "{{.Home}}/src/csutter/setup-private"
+  mountPoint: /mnt/setup-private
+
+provision:
+  # Install packages
+  - mode: system
+    script: |
+      #!/bin/bash
+      set -eux -o pipefail
+      dnf update -y
+      dnf install -y \
+        autoconf automake bison cmake flex gcc gcc-c++ gdb gettext libtool make \
+        meson ninja-build patch strace \
+        git info less man-pages bzip2 diffutils fish ripgrep rcm tree which zip
+
+  # Apply dotfiles
+  - mode: user
+    script: |
+      #!/bin/bash
+      set -eux -o pipefail
+      RCRC=/mnt/setup/tag-dev-vm/rcrc rcup -vf
+
+probes:
+- mode: readiness
+  description: rcm dotfiles set up
+  script: |
+    #!/bin/bash
+    set -eux -o pipefail
+    if ! timeout 60s bash -c 'until [ -e "$HOME/.rcrc" ]; do sleep 2; done'; then
+      echo >&2 "~/.rcrc does not exist"
+      exit 1
+    fi
+  hint: |
+    No ~/.rcrc found (try looking at /var/log/cloud-init-output.log in the guest)
