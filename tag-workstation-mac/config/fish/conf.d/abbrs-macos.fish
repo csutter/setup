@@ -2,8 +2,5 @@
 if status is-interactive
   abbr --add --global bbg 'brew bundle -g'
 
-  abbr --add --global c 'container'
-  abbr --add --global cl 'container list --all'
-  abbr --add --global cm 'container machine'
-  abbr --add --global css 'container system start'
+  abbr --add --global lc 'limactl'
 end
