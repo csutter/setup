@@ -3,3 +3,6 @@ Host *
   IdentityAgent %d/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh
 
 Include %d/.lima/*/ssh.config
+
+Host lima-*
+  ForwardAgent yes

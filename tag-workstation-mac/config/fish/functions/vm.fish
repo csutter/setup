@@ -9,8 +9,11 @@ function vm --description 'Manage Lima VMs'
   switch $argv[1]
     case new
       limactl create --tty=false --name $name template:base
-      and vm start $name
-      and limactl autostart enable $name
+        and limactl start $name
+        and limactl autostart enable $name
+        # Fix potential SSH socket issues due to lingering master created without agent forwarding
+        and ssh -O check lima-$name 2>/dev/null
+        and ssh -O exit lima-$name
     case start
       limactl start $name
     case enter
