@@ -1,0 +1,8 @@
+registries:
+  - type: standard
+    ref: v4.574.1
+
+packages:
+  # Optional local set of machine-specific packages
+  - import: aqua.local.yaml
+  - name: cli/cli@v2.102.0 # GitHub CLI

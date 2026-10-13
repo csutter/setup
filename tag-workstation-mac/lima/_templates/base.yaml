@@ -40,6 +40,40 @@ provision:
       set -eux -o pipefail
       RCRC=/mnt/setup/tag-dev-vm/rcrc rcup -vf
 
+  # Install or update aqua
+  - mode: user
+    script: |
+      #!/bin/bash
+      set -eux -o pipefail
+
+      INSTALLER_VERSION=v4.1.0
+      INSTALLER_SHA256=4d3e513d42f425609c1ead6ecd40b9c62492011979dfe23d7012428a59efbe82
+
+      export PATH="$HOME/.local/share/aquaproj-aqua/bin:$PATH"
+
+      if command -v aqua >/dev/null 2>&1; then
+        aqua update-aqua
+      else
+        tmp="$(mktemp -d)"
+        trap 'rm -rf "$tmp"' EXIT
+
+        curl -sSfL -o "$tmp/aqua-installer" \
+          "https://raw.githubusercontent.com/aquaproj/aqua-installer/${INSTALLER_VERSION}/aqua-installer"
+        echo "${INSTALLER_SHA256}  $tmp/aqua-installer" | sha256sum -c -
+        chmod +x "$tmp/aqua-installer"
+
+        "$tmp/aqua-installer"
+      fi
+
+  # Install global aqua tools
+  - mode: user
+    script: |
+      #!/bin/bash
+      set -eux -o pipefail
+
+      export AQUA_GLOBAL_CONFIG="$HOME/.config/aqua/aqua.yaml"
+      aqua install -a
+
 probes:
 - mode: readiness
   description: rcm dotfiles set up
@@ -52,3 +86,16 @@ probes:
     fi
   hint: |
     No ~/.rcrc found (try looking at /var/log/cloud-init-output.log in the guest)
+- mode: readiness
+  description: tool installation complete
+  script: |
+    #!/bin/bash
+    set -eux -o pipefail
+    # gh should always be present as it's in my global aqua configuration
+    if ! timeout 60s bash -c 'until command -v gh >/dev/null 2>&1; do sleep 2; done'; then
+      echo >&2 "gh is not installed"
+      exit 1
+    fi
+  hint: |
+    gh not found, assuming tool installation failed (try looking at /var/log/cloud-init-output.log
+    in the guest)
